@@ -1,0 +1,119 @@
+/* Main container for the background effect */
+.heartbeat-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+
+  /* The detailed grid background */
+  background-image: linear-gradient(
+      rgba(110, 150, 120, 0.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(110, 150, 120, 0.07) 1px, transparent 1px),
+    linear-gradient(rgba(110, 150, 120, 0.12) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(110, 150, 120, 0.12) 2px, transparent 2px);
+  background-size: 1rem 1rem, 1rem 1rem, 5rem 5rem, 5rem 5rem;
+
+  /* Fade the edges for a seamless appearance */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    white 5%,
+    white 95%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    white 5%,
+    white 95%,
+    transparent
+  );
+}
+
+/* 
+  This is the main scroller. It holds all three line layers.
+*/
+.heartbeat-scroller,
+.heartbeat-scroller::before,
+.heartbeat-scroller::after {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 250px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background-repeat: repeat-x;
+
+  /* --- UPGRADE #2: STABLE MOVEMENT --- */
+  /* We slow down the animations for a more calm and professional feel. */
+  animation: seamless-scroll 15s linear infinite,
+    /* Was 10s, now slower */ vertical-drift 12s ease-in-out infinite; /* Was 7s, now much slower and smoother */
+}
+
+/* LAYER 1: The Main, Brightest Line */
+.heartbeat-scroller {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 100'%3E%3Cpath d='M0 50 H150 q5 -10 10 0 t10 0 L175 50 L180 55 L190 20 L200 65 L205 50 H240 q10 -20 20 0 t20 0 H800' stroke='currentColor' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* --- UPGRADE #1: THE NEON EFFECT --- */
+  /* We use a very bright, almost white-hot green for the core line. */
+  color: #d1fae5; /* A very pale, bright green */
+  z-index: 3;
+
+  /* We stack multiple drop-shadows to create a realistic neon glow:
+     1. A tight, bright inner glow (the tube itself).
+     2. A medium, primary color bloom.
+     3. A large, faint outer haze.
+  */
+  filter: drop-shadow(0 0 1px currentColor) drop-shadow(0 0 3px #4ade80)
+    /* Tailwind Green 400 */ drop-shadow(0 0 10px #4ade80);
+}
+
+/* LAYER 2: The Secondary, Fainter Line */
+.heartbeat-scroller::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 100'%3E%3Cpath d='M0 50 H200 L210 40 L220 60 L230 50 H300 L310 55 L320 45 L330 50 H800' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  color: #34d399; /* A standard clinical green */
+  opacity: 0.4;
+  background-size: 700px 100px; /* Different size for non-repeating pattern */
+  z-index: 2;
+  filter: drop-shadow(0 0 3px currentColor); /* A softer glow */
+}
+
+/* LAYER 3: The Faintest "Noise" Line */
+.heartbeat-scroller::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 100'%3E%3Cpath d='M0 50 L50 52 L100 48 L150 50 L200 53 L250 47 L300 50 H800' stroke='currentColor' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  color: #34d399;
+  opacity: 0.2;
+  background-size: 1100px 100px; /* Another different size */
+  z-index: 1;
+  filter: blur(0.5px); /* Just a blurry line, no strong glow */
+}
+
+/* --- THE KEYFRAME ANIMATIONS --- */
+
+/* The main scrolling animation. */
+@keyframes seamless-scroll {
+  from {
+    transform: translateX(0) translateY(-50%);
+  }
+  to {
+    transform: translateX(-50%) translateY(-50%);
+  }
+}
+
+/* The slow, stable vertical drift animation. */
+@keyframes vertical-drift {
+  0%,
+  100% {
+    top: 49%;
+  }
+  50% {
+    top: 51%;
+  }
+}
